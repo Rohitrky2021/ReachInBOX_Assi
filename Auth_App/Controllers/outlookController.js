@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
-import { getOutlookOAuthClient } from '../middlewares/oauth';
-import { analyzeEmailContent, generateEmailReply } from '../services/openAIService';
-import { sendEmail } from '../middlewares/emailUtils';
+const { getOutlookOAuthClient } = require('../utils/oauth');
+const { analyzeEmailContent, generateEmailReply } = require('../services/openAIService');
+const { sendEmail } = require('../utils/emailUtils');
 
-export const connectOutlook = async (req: Request, res: Response) => {
+exports.connectOutlook = async (req, res) => {
     const cca = getOutlookOAuthClient();
     const authCodeUrlParameters = {
         scopes: ['https://graph.microsoft.com/.default'],
@@ -14,12 +13,12 @@ export const connectOutlook = async (req: Request, res: Response) => {
     res.redirect(authUrl);
 };
 
-export const handleOutlookCallback = async (req: Request, res: Response) => {
+exports.handleOutlookCallback = async (req, res) => {
     const cca = getOutlookOAuthClient();
     const { code } = req.query;
 
     const tokenRequest = {
-        code: code as string,
+        code: code,
         scopes: ['https://graph.microsoft.com/.default'],
         redirectUri: process.env.OUTLOOK_REDIRECT_URI,
     };
@@ -28,7 +27,7 @@ export const handleOutlookCallback = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'Outlook connected successfully', tokens: response.accessToken });
 };
 
-export const handleOutlookWebhook = async (req: Request, res: Response) => {
+exports.handleOutlookWebhook = async (req, res) => {
     const { emailContent } = req.body;
     
     const category = await analyzeEmailContent(emailContent);

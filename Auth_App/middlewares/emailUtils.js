@@ -1,9 +1,7 @@
-import * as nodemailer from 'nodemailer';
-import { google } from 'googleapis';
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
 
-export const sendEmail = async (email: string, content: string) => {
-    // Logic to send email using nodemailer (Gmail or Outlook)
-    // Example for Gmail
+exports.sendEmail = async (email, content) => {
     const oAuth2Client = new google.auth.OAuth2(
         process.env.GMAIL_CLIENT_ID,
         process.env.GMAIL_CLIENT_SECRET,

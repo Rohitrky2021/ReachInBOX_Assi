@@ -1,10 +1,9 @@
-import { Request, Response } from 'express';
-import { google } from 'googleapis';
-import { getGmailOAuthClient } from '../middlewares/oauth';
-import { analyzeEmailContent, generateEmailReply } from '../services/openAIService';
-import { sendEmail } from '../middlewares/emailUtils';
+const { google } = require('googleapis');
+const { getGmailOAuthClient } = require('../utils/oauth');
+const { analyzeEmailContent, generateEmailReply } = require('../services/openAIService');
+const { sendEmail } = require('../utils/emailUtils');
 
-export const connectGmail = async (req: Request, res: Response) => {
+exports.connectGmail = async (req, res) => {
     const oAuth2Client = getGmailOAuthClient();
     const authUrl = oAuth2Client.generateAuthUrl({
         access_type: 'offline',
@@ -14,17 +13,17 @@ export const connectGmail = async (req: Request, res: Response) => {
     res.redirect(authUrl);
 };
 
-export const handleGmailCallback = async (req: Request, res: Response) => {
+exports.handleGmailCallback = async (req, res) => {
     const oAuth2Client = getGmailOAuthClient();
     const { code } = req.query;
 
-    const { tokens } = await oAuth2Client.getToken(code as string);
+    const { tokens } = await oAuth2Client.getToken(code);
     oAuth2Client.setCredentials(tokens);
 
     res.status(200).json({ message: 'Gmail connected successfully', tokens });
 };
 
-export const handleGmailWebhook = async (req: Request, res: Response) => {
+exports.handleGmailWebhook = async (req, res) => {
     const { emailContent } = req.body;
     
     const category = await analyzeEmailContent(emailContent);

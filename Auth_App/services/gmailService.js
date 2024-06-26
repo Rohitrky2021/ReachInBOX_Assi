@@ -1,14 +1,13 @@
-import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+const { google } = require('googleapis');
 
-export const getGmailService = (tokens: any) => {
+exports.getGmailService = (tokens) => {
     const oAuth2Client = new google.auth.OAuth2();
     oAuth2Client.setCredentials(tokens);
 
     return google.gmail({ version: 'v1', auth: oAuth2Client });
 };
 
-export const listMessages = async (gmail: any) => {
+exports.listMessages = async (gmail) => {
     const res = await gmail.users.messages.list({
         userId: 'me',
         q: 'is:unread',
@@ -16,7 +15,7 @@ export const listMessages = async (gmail: any) => {
     return res.data.messages || [];
 };
 
-export const getMessage = async (gmail: any, messageId: string) => {
+exports.getMessage = async (gmail, messageId) => {
     const res = await gmail.users.messages.get({
         userId: 'me',
         id: messageId,

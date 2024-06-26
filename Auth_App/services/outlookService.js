@@ -1,8 +1,8 @@
-import { Client } from '@microsoft/microsoft-graph-client';
-import { TokenCredentialAuthenticationProvider } from '@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials';
-import { getOutlookOAuthClient } from '../utils/oauth';
+const { Client } = require('@microsoft/microsoft-graph-client');
+const { TokenCredentialAuthenticationProvider } = require('@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials');
+const { getOutlookOAuthClient } = require('../utils/oauth');
 
-export const getOutlookClient = (accessToken: string) => {
+exports.getOutlookClient = (accessToken) => {
     const credentialProvider = new TokenCredentialAuthenticationProvider({
         getToken: async () => accessToken,
     });
@@ -10,7 +10,7 @@ export const getOutlookClient = (accessToken: string) => {
     return Client.initWithMiddleware({ authProvider: credentialProvider });
 };
 
-export const listMessages = async (client: Client) => {
+exports.listMessages = async (client) => {
     const messages = await client.api('/me/messages')
         .filter("isRead eq false")
         .get();
@@ -18,7 +18,7 @@ export const listMessages = async (client: Client) => {
     return messages.value;
 };
 
-export const getMessage = async (client: Client, messageId: string) => {
+exports.getMessage = async (client, messageId) => {
     const message = await client.api(`/me/messages/${messageId}`).get();
     return message;
 };

@@ -30,6 +30,8 @@ ReachInbox/
     |-- package.json
     |-- package-lock.json
  
+```
+
 
 ## Setup Instructions
 

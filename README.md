@@ -4,7 +4,7 @@
 ReachInbox-MailSenseAI is a powerful backend tool designed to parse emails from Google and Outlook, categorize them into "Interested," "Not Interested," or "More Information," and suggest context-based replies. Leveraging OAuth for authentication, CronJob for task scheduling and OpenAI for advanced natural language processing capabilities, this tool streamlines email management and enhances user productivity.
 
 ## Video Walkthrough
-[Watch the video walkthrough here](https://www.loom.com/share/3418f4004b204913a88381fae0abea1f?sid=a348b45b-5d5e-49e6-bdd2-fd8627be7387)
+[Watch the video walkthrough here](https://www.loom.com/share )
 
 ## Features
 - **Google OAuth Integration:** Users can seamlessly sign up and log in using their Google accounts, enhancing security and convenience.

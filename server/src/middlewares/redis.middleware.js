@@ -1,30 +1,27 @@
-const Redis = require("ioredis");
-require("dotenv").config()
-const connection = new Redis(
-    {
-      port: process.env.redis_port,
-      host: process.env.redis_host,
-      password: process.env.redis_pass,
-    }, {
+ 
+  const Redis = require("ioredis");
+  require("dotenv").config();
+  
+  const redisConnection = new Redis({
+    port: process.env.redis_port,
+    host: process.env.redis_host,
+    password: process.env.redis_pass,
+  }, {
     maxRetriesPerRequest: null
   });
-
-
-  const redisGetToken = async (email) => {
+  
+  const fetchTokenFromRedis = async (email) => {
     try {
-      const token = await connection.get(email);
+      const token = await redisConnection.get(email);
       return token;
     } catch (error) {
-      console.error(`Error retrieving token from Redis for email ${email}:`, error.message);
-      throw new Error(`Error retrieving token from Redis for email ${email}.`);
+      console.error(`Failed to fetch token from Redis for email ${email}:`, error.message);
+      throw new Error(`Unable to fetch token from Redis for email ${email}.`);
     }
   };
   
-
-
-
-
   module.exports = {
-    connection,
-    redisGetToken
-  }
+    redisConnection,
+    fetchTokenFromRedis
+  };
+  

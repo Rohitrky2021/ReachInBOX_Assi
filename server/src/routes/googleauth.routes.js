@@ -1,7 +1,7 @@
 const axios = require("axios");
 const express = require("express");
 require("dotenv").config();
-const { createConfig } = require("../helpers/utils");
+const { createConfig } = require("../Util/utils");
 const { OAuth2Client } = require("google-auth-library");
 const { connection } = require("../middlewares/redis.middleware");
 const googleRouter = express.Router();
@@ -78,7 +78,7 @@ const getUser = async (req, res) => {
     res.send(error.message);
   }
 };
- 
+
 const sendMail = async (data, token) => {
   try {
     if (!token) {
@@ -100,7 +100,7 @@ const sendMail = async (data, token) => {
     });
 
     const content = response.choices[0]?.message?.content;
-    console.log(content)
+    console.log(content);
 
     const mailOptions = {
       from: data.from,
@@ -114,43 +114,47 @@ const sendMail = async (data, token) => {
           <p style="font-size: 16px; color: #666;">${content}</p>
           <p style="font-size: 16px; color: #666;">Best regards,</p>
           <p style="font-size: 16px; color: #666;"><strong>Shraddha Gawde</strong><br>Reach-In Box</p>
-        </div>`
+        </div>`,
     };
 
     const emailData = {
       raw: Buffer.from(
         [
-          'Content-type: text/html;charset=iso-8859-1',
-          'MIME-Version: 1.0',
+          "Content-type: text/html;charset=iso-8859-1",
+          "MIME-Version: 1.0",
           `from: ${data.from}`,
           `to: ${data.to}`,
           `subject: ${mailOptions.subject}`,
           `text: ${mailOptions.text}`,
           `html: ${mailOptions.html}`,
-          
-          
-        ].join('\n')
-      ).toString('base64')
+        ].join("\n")
+      ).toString("base64"),
     };
 
-    const sendMessageResponse = await axios.post(`https://gmail.googleapis.com/gmail/v1/users/${data.from}/messages/send`, emailData, {
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
+    const sendMessageResponse = await axios.post(
+      `https://gmail.googleapis.com/gmail/v1/users/${data.from}/messages/send`,
+      emailData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
+    );
 
+
+    
     // Modify label for the sent email
     const labelUrl = `https://gmail.googleapis.com/gmail/v1/users/${data.from}/messages/${sendMessageResponse.data.id}/modify`;
     const labelConfig = {
-      method: 'POST',
+      method: "POST",
       url: labelUrl,
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       data: {
-        addLabelIds: ["Label_4"]
-      }
+        addLabelIds: ["Label_4"],
+      },
     };
     await axios(labelConfig);
 
@@ -160,8 +164,6 @@ const sendMail = async (data, token) => {
     throw new Error("Can't send email: " + error.message);
   }
 };
-
-
 
 module.exports = {
   googleRouter,

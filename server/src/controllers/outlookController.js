@@ -1,8 +1,11 @@
 const express = require("express");
 require("dotenv").config();
-const { createConfig } = require("../helpers/utils");
+const { createConfig } = require("../Util/utils");
 const axios = require("axios");
-const { connection, redisGetToken, } = require("../middlewares/redis.middleware");
+const {
+  connection,
+  redisGetToken,
+} = require("../middlewares/redis.middleware");
 const { ConfidentialClientApplication } = require("@azure/msal-node");
 
 const OpenAI = require("openai");
@@ -12,7 +15,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_SECRECT_KEY });
 const clientId = process.env.AZURE_CLIENT_ID;
 const clientSecret = process.env.AZURE_CLIENT_SECRET;
 // const redirectUri = "http://localhost:4400/outlook/callback";
-const redirectUri ="https://reachinbox-assignment-4rf9.onrender.com/outlook/callback";
+const redirectUri =
+  "https://reachinbox-assignment-4rf9.onrender.com/outlook/callback";
 const scopes = ["user.read", "Mail.Read", "Mail.Send"];
 
 const ccaConfig = {
@@ -177,8 +181,14 @@ const sendMail = async (data, token) => {
     const [heading, features, benefits] =
       response.choices[0].message.content.split("\n\n");
     const headingHTML = `<h2>${heading}</h2>`;
-    const featuresHTML = `<ul>${features.split("\n").map((feature) => `<li>${feature}</li>`).join("")}</ul>`;
-    const benefitsHTML = `<ul>${benefits.split("\n").map((feature) => `<li>${feature}</li>`).join("")}</ul>`;
+    const featuresHTML = `<ul>${features
+      .split("\n")
+      .map((feature) => `<li>${feature}</li>`)
+      .join("")}</ul>`;
+    const benefitsHTML = `<ul>${benefits
+      .split("\n")
+      .map((feature) => `<li>${feature}</li>`)
+      .join("")}</ul>`;
 
     const mailOptions = {
       message: {
